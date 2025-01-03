@@ -128,11 +128,14 @@ void delUser(User *root, unsigned int userID) {
 }
 
 void addMovie(User *user, unsigned int movieID) {
-    for (unsigned int i = 0; i < user->moviesCount; i++) {
-        if (user->movies[i] == movieID) {
-            printf("ERROR\n");
-            return;
-        }
+    unsigned int i = 0;
+    while (i < user->moviesCount && user->movies[i] < movieID) {
+        i++;
+    }
+
+    if (i < user->moviesCount && user->movies[i] == movieID) {
+        printf("ERROR\n");
+        return;
     }
 
     if (user->moviesCount == user->moviesCapacity) {
@@ -140,7 +143,12 @@ void addMovie(User *user, unsigned int movieID) {
         user->movies = realloc(user->movies, user->moviesCapacity * sizeof(unsigned int));
     }
 
-    user->movies[user->moviesCount++] = movieID;
+    for (unsigned int j = user->moviesCount; j > i; j--) {
+        user->movies[j] = user->movies[j - 1];
+    }
+
+    user->movies[i] = movieID;
+    user->moviesCount++;
     printf("OK\n");
 }
 
@@ -166,32 +174,12 @@ void delMovie(User *user, unsigned int movieID) {
     printf("OK\n");
 }
 
-void bubbleSort(unsigned int *arr, unsigned int n) {
-    for (unsigned int i = 0; i < n - 1; i++) {
-        for (unsigned int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                unsigned int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-            }
-        }
-    }
-}
-
-unsigned int removeDuplicates(unsigned int *arr, unsigned int n) {
-    if (n == 0) return 0;
-
-    unsigned int uniqueIndex = 0;
-    for (unsigned int i = 1; i < n; i++) {
-        if (arr[i] != arr[uniqueIndex]) {
-            uniqueIndex++;
-            arr[uniqueIndex] = arr[i];
-        }
-    }
-    return uniqueIndex + 1;
-}
-
 void printMovies(User *user, unsigned int movieID) {
+    if (user == NULL) {
+        printf("ERROR\n");
+        return;
+    }
+
     User *parent = user->parent;
 
     unsigned int *userMovies = user->movies;
@@ -206,24 +194,34 @@ void printMovies(User *user, unsigned int movieID) {
         return;
     }
 
-    unsigned int *allMovies = malloc(totalMoviesCount * sizeof(unsigned int));
-    unsigned int index = 0;
-    for (unsigned int i = 0; i < userMoviesCount; i++) {
-        allMovies[index++] = userMovies[i];
-    }
-    for (unsigned int i = 0; i < parentMoviesCount; i++) {
-        allMovies[index++] = parentMovies[i];
+    unsigned int *result = malloc(totalMoviesCount * sizeof(unsigned int));
+    unsigned int i = 0, j = 0, k = 0;
+
+    while (i < userMoviesCount && j < parentMoviesCount) {
+        if (userMovies[i] < parentMovies[j]) {
+            result[k++] = userMovies[i++];
+        } else if (userMovies[i] > parentMovies[j]) {
+            result[k++] = parentMovies[j++];
+        } else {
+            result[k++] = userMovies[i++];
+            j++;
+        }
     }
 
-    bubbleSort(allMovies, totalMoviesCount);
-    totalMoviesCount = removeDuplicates(allMovies, totalMoviesCount);
+    while (i < userMoviesCount) {
+        result[k++] = userMovies[i++];
+    }
 
-    for (unsigned int i = 0; i < totalMoviesCount; i++) {
-        printf("%u ", allMovies[i]);
+    while (j < parentMoviesCount) {
+        result[k++] = parentMovies[j++];
+    }
+
+    for (unsigned int x = 0; x < k; x++) {
+        printf("%u ", result[x]);
     }
 
     printf("\n");
-    free(allMovies);
+    free(result);
 }
 
 int main() {
