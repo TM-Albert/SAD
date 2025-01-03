@@ -1,0 +1,53 @@
+addUser 0 10
+addUser 0 2
+addUser 2 30
+addUser 10 5
+addUser 10 40
+printUserMovies 10
+printUserMovies 30
+addMovie 10 4
+addMovie 10 2
+addMovie 10 3
+printUserMovies 10
+addMovie 2 55
+addMovie 2 21
+addMovie 2 3
+addMovie 2 9
+printUserMovies 2
+addMovie 30 11
+addMovie 30 15
+addMovie 30 2
+addMovie 30 9
+printUserMovies 30
+delMovie 30 11
+printUserMovies 30
+delMovie 30 12
+delMovie 5 1
+addMovie 0 33
+delMovie 0 33
+delUser 0
+delUser 2
+delUser 5
+printUserMovies 30
+addMovie 0 10
+printUserMovies 30
+delUser 10
+printUserMovies 40
+addUser 40 50
+addUser 39 39
+addUser 39 35
+addUser 40 35
+delUser 40
+printUserMovies 35
+printUserMovies 50
+addMovie 0 14
+addMovie 35 13
+addMovie 35 12
+printUserMovies 35
+addMovie 50 11
+addMovie 50 13
+addMovie 50 14
+printUserMovies 50
+addUser 15 51
+addUser 30 50
+delMovie 50 12
